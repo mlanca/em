@@ -78,14 +78,15 @@ class Conn_mariadb:
             if cursor:
                 Conn_mariadb.conndb(True)
 
-    def add_client(self, fname, email):
+    def add_client(self, fname, email, created):
         try:
+            cursor = Conn_mariadb.conndb(self)
             search_data = Conn_mariadb.select_to_list(self)
             if email in search_data:
                 return "Already there"
-            cursor = Conn_mariadb.conndb(self)
-            statement = "INSERT INTO clients (fname,email) VALUES (%s, %s)"
-            data = (fname, email)
+
+            statement = "INSERT INTO clients (fname,email,created) VALUES (%s, %s, %s)"
+            data = (fname, email, created)
             cursor.execute(statement, data)
             return "Successfully added entry to database"
         except Exception as error:
@@ -94,8 +95,14 @@ class Conn_mariadb:
             print("Unexpected error:", sys.exc_info()[0])
             raise
         finally:
-            cursor = None
+            Conn_mariadb.conndb(True)
 
     @staticmethod
     def display_count():
         print("Total Connection Count %d" % Conn_mariadb.connCount)
+
+
+if __name__ == '__main__':
+    conn = Conn_mariadb('clients')
+    res = conn.add_client('l', 'l')
+    print(res)

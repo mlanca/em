@@ -1,5 +1,23 @@
 import sys
+import datetime
 import Conn_mariadb
+
+
+class Person:
+    perCount = 0
+
+    def __init__(self, fname, email, created):
+        self.fname = fname
+        self.email = email
+        self.created = created
+
+        Person.perCount += 1
+
+        def displayCount(self):
+            print ("Total Person Objects Created %d" % Person.perCount)
+
+        def display_Person(self):
+            print ("Name : ", self.fname,  ", Email: ", self.email)
 
 
 def cont(conn):
@@ -35,8 +53,10 @@ def main(dirty=True):
         if prompt1.startswith('y'):
             prompt2 = input("First name: ")
             prompt3 = input("Email : ")
-            res = conn.add_client(prompt2, prompt3)
+            datetime_object = str(datetime.datetime.now())
+            res = conn.add_client(prompt2, prompt3, datetime_object)
             if res.lower().startswith('a'):
+                print(res)
                 prompt4 = input('try again? y/n?: ')
                 if prompt4.startswith('y'):
                     prompt4 = None
